@@ -1,0 +1,32 @@
+[
+
+  {
+    "name": "Emily Rivera",
+    "source": "Advertisement",
+    "salesAgent": "68e49fdf24fcc90c8e77b5be",
+    "status": "New",
+    "tags": ["Follow-up"],
+    "timeToClose": 90,
+    "priority": "Medium"
+  },
+
+  {
+    "name": "Sarah Thompson",
+    "source": "Website",
+    "salesAgent": "68e49fdf24fcc90c8e77b5bd",
+    "status": "Proposal_Sent",
+    "tags": ["High Value", "Follow-up"],
+    "timeToClose": 20,
+    "priority": "Low"
+  },
+
+  {
+    "name": "David Chen",
+    "source": "Cold Call",
+    "salesAgent": "68e49fdf24fcc90c8e77b5bc",
+    "status": "Qualified",
+    "tags": ["High Value", "Follow-up"],
+    "timeToClose": 60,
+    "priority": "Medium"
+  }
+]
