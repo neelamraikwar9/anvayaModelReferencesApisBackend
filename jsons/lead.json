@@ -18,15 +18,7 @@
     "tags": ["High Value", "Follow-up"],
     "timeToClose": 20,
     "priority": "Low"
-  },
-
-  {
-    "name": "David Chen",
-    "source": "Cold Call",
-    "salesAgent": "68e49fdf24fcc90c8e77b5bc",
-    "status": "Closed",
-    "tags": ["High Value", "Follow-up"],
-    "timeToClose": 60,
-    "priority": "Medium"
   }
+
+
 ]

@@ -1,7 +1,8 @@
 const { initializeDB } = require("./db.connect");
 const SalesAgent = require("./models/salesAgent.model");
 const Lead = require("./models/lead.model");
-const Comment = require("./models/comment.model")
+const Comment = require("./models/comment.model");
+const Tag = require("./models/tag.model");
 const fs = require("fs");
 
 const express = require("express");
@@ -118,6 +119,53 @@ const addComment = async () => {
 };
 
 // addComment();   
+
+
+const closedLead = {
+    name: "David Chen",
+    source: "Cold Call",
+    salesAgent: "68e49fdf24fcc90c8e77b5bc",
+    status: "Closed",
+    tags: ["High Value", "Follow-up"],
+    timeToClose: 60,
+    priority: "Medium",
+    closedAt: "2025-07-10"
+  }
+
+  const addClosedLead = async () => {
+    try{
+        const leadNew = new Lead(closedLead);
+        await leadNew.save();
+        console.log(leadNew, "Comment added successfully.")
+    } catch(error){
+        console.log("error", error)
+    }
+};
+
+// addClosedLead();  
+
+
+// add tags;
+const newTags2 = 
+    // {
+    // name: "High value"
+    // }
+
+    {
+    name: "Follow-Up"
+    }
+
+const addNewTag = async () => {
+    try{
+    const newTag = new Tag(newTags2);
+    await newTag.save();
+    console.log(newTag, "Tag added successfully.")
+    } catch(error){
+        throw error
+    }
+}
+// addNewTag();
+
 
 
 
@@ -409,77 +457,97 @@ app.get("/comments/:commentsId", async (req, res) => {
 
 //Reporting Api;
 //get leads closed last weak; 
-
 // Description: Fetches all leads that were closed (status: Closed) in the last 7 days.
+//Get closed leads within last 7 days.
 
-// app.get("/leads/report/last-week", async (req, res) => {
-//     try{
-//         const sevenDaysAgo = new Date();
-//         console.log(sevenDaysAgo, "sevendaysago")
-//         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); 
-        
-//         const closedLeads = await Lead.find({
-//             status: "Closed",
-//             closedAt: {$gte: sevenDaysAgo}   //In the code, $gte is a MongoDB query operator that means "greater than or equal to".
-//         });
-        
-//         if(closedLeads){
-//             res.json(closedLeads)
-//         } else{
-//             res.status(404).json({error: "Lead not found."})
-//         }
-//     } catch(error){
-//         res.status(500).json({ error: 'Failed to fetch closed Leads' })
-//     }
-// })
-
-async function closedLeadsInSevenDays(){
+async function getClosedLeads(){
     try{
-    const sevenDaysAgo = new Date();
-    console.log(sevenDaysAgo, "sevendaysago")
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); 
-
-    const closedLeads = await Lead.find({
-            status: "Closed",
-            closedAt: {$gte: sevenDaysAgo}   //In the code, $gte is a MongoDB query operator that means "greater than or equal to".
-        });
-    console.log(closedLeads, "closedLeads")
-    return closedLeads
-    } catch(error){
-        throw error
-    }     
-}
-
-closedLeadsInSevenDays();
-
-
-//Get lead by status;
-async function getLeadsByStatus(leadByStatus){
-    try{
-        const leadStatus = await Lead.find({status: leadByStatus})
-        console.log(leadStatus)
-        return leadStatus
-    }
+        const sevenDaysAgo = new Date();
+        console.log(sevenDaysAgo, "sevendaysago")
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        const closedLeads = await Lead.find({status: "Closed", closedAt: {$gte: sevenDaysAgo}});   
+        console.log(closedLeads, "checking closed leads. ");
+        return closedLeads;
+    }   
     catch(error){
+        throw error;
+    }
+}
+
+// getClosedLeads()
+
+// api to get closed leads within last Week; 
+app.get("/leads/report/lastWeek", async(req, res) => {
+    try{
+    const leadClosed = await getClosedLeads();
+    console.log(leadClosed, "lead Closed")
+    if(leadClosed){
+        res.json(leadClosed);
+    } else{
+        res.status(404).json({error: "Closed leads not found."})
+    }
+} catch(error){
+    res.status(500).json({error: "Failed to fetch closed leads."})
+}
+})
+
+
+    // Get Total Leads in Pipeline**
+    // GET /report/pipeline`
+    // Description**: Fetches the total number of leads currently in the pipeline (all statuses except `Closed`).
+
+    async function getTotalLeadsInPipeline(){
+        try{
+            const totalLeadsInPipeLine = await Lead.countDocuments({ status: {$ne: "Closed"}});
+            console.log(totalLeadsInPipeLine, "totalLeadsInPipeLine....klfjkdljkdjfk")
+            return totalLeadsInPipeLine;
+        } catch(error){
+            console.log(error, "error")
+        }
+    }
+    // getTotalLeadsInPipeline();
+
+app.get("/leads/report/pipeline", async (req, res) => {
+    try{
+        const totalLeads =  await getTotalLeadsInPipeline();
+        console.log(totalLeads, "leads count")
+        if(totalLeads){
+            res.status(200).json({"totalLeadsInPipeline": totalLeads})
+        } else{
+            res.status(404).json({error: "Total Leads in pipeline is not found."})
+        }
+    } catch(error){
+        res.status(500).json({error: "Cannot fetch total Leads."})
+    }
+})
+
+// get all tags;
+const getAllTags = async() => {
+    try{
+        const allTags = await Tag.find()
+        console.log(allTags, "allTags")
+        return allTags;
+    } catch(error){
         throw error
     }
 }
 
-getLeadsByStatus("Closed")
+// getAllTags();
 
-// api to get leads by status.
-app.get("/leads/status/:leadByStatus", async(req, res) => {
+app.get("/tags", async(req, res) => {
     try{
-        const leadsStatus = await getLeadsByStatus(req.params.leadByStatus)
-        if(leadsStatus){
-            res.json(leadsStatus)
+        const tags = await getAllTags();
+        if(tags){
+            res.json(tags)
         } else{
-            res.status(404).json({error: "Lead not found."})
+            res.status(404).json({error: "Tags not found."})
         }
+
     } catch(error){
-            res.status(500).json({error: "Failed to fetch Lead by Status."})
-        }
+        res.status(500).json({error: "Cannot fetch Tags."})
+    }
 })
+
 
 
 
