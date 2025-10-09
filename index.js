@@ -92,6 +92,36 @@ const addLead = async () => {
 // addLead();
 
 
+
+//adding comment data in the database; 
+const commentData = {
+  lead: "68e4b4e7c0f4feb4e6795923", //lead Id. (Acme Corp)
+  author: "68e49fdf24fcc90c8e77b5bb",  // Sales Agent ID  (Frank's Id)
+  commentText: "Reached out to lead, waiting for response."
+}
+
+
+const commentData2 = {
+    lead: "68e50c6f2cfcff7485308b23", //lead Id.  (Emily Rivera)
+    author: "68e49fdf24fcc90c8e77b5be",  // Sales Agent ID (John Doe)
+    commentText: "Lead interested, scheduled a meeting.",
+}
+
+const addComment = async () => {
+    try{
+        const newComment = new Comment(commentData2);
+        await newComment.save();
+        console.log(newComment, "Comment added successfully.")
+    } catch(error){
+        console.log("error", error)
+    }
+};
+
+// addComment();   
+
+
+
+
 //get all leads;
 
 const getAllLeads = async () => {
@@ -117,7 +147,7 @@ app.get("/leads", async(req, res) => {
             res.status(404).json({ error: "Lead not found."})
         }
     } catch(error){
-        res.status(500).json({error: "An unexpected error occurred on the server."})
+        res.status(500).json({error: "Failed to fetch Leads."})
     }
 })
 
@@ -146,7 +176,7 @@ app.get("/leads/:leadId", async(req, res) => {
             res.status(404).json({error: 'Lead not found.'})
         }
     } catch(error){
-        res.status(500).json({error: "An unexpected error occurred on the server."})
+        res.status(500).json({error: "Failed to fetch Lead by Id."})
     }
 })
 
@@ -175,7 +205,7 @@ app.get("/leads/status/:leadByStatus", async(req, res) => {
             res.status(404).json({error: "Lead not found."})
         }
     } catch(error){
-            res.status(500).json({error: "An unexpected error occurred on the server."})
+            res.status(500).json({error: "Failed to fetch Lead by Status."})
         }
 })
 
@@ -205,7 +235,7 @@ app.get("/leads/tags/:tag", async(req, res) => {
              res.status(404).json({error: ".Lead not found."})
         }
     } catch(error){
-        res.status(500).json({error: "An unexpected error occurred on the server."})
+        res.status(500).json({error: "Failed to fetch Lead by Tags."})
     }
 })
 
@@ -235,7 +265,7 @@ app.get("/leads/source/:leadBySource", async(req, res) => {
             res.status(404).json({error: "Lead not found."})
         }
     } catch(error){
-        res.status(500).json({error: "An unexpected error occurred on the server."})
+        res.status(500).json({error: "Failed to fetch Lead by Source."})
     }
 })
 
@@ -267,7 +297,7 @@ app.get("/salesAgent", async(req, res) => {
              res.status(400).json({ error: "Sales agent is not found."})
         }
     } catch(error){
-        res.status(500).json({error: "An unexpected error occurred on the server."})
+        res.status(500).json({error: "Failed to fetch Sales Agent."})
     }
 })
 
@@ -283,53 +313,176 @@ async function getAgentById(agentId){
         throw error
     }
 }
-// getAgentById("68e49fdf24fcc90c8e77b5bd")
+// getAgentById("68e49fdf24fcc90c8e77b5bc")
 
+
+//have to chek it;......................
 // api to get salesAgent by Id;
 
-app.get("/salesAgent/salesAgentByID/:agentId", async(req, res) => {
+// app.get("/salesAgent/:agentId", async(req, res) => {
+//     try{
+//         const salesAgentById = await getAgentById(req.params.agentId)
+//         console.log(salesAgentById, "checking sales agent");
+//         if(salesAgentById){
+//             req.json(salesAgentById)
+//         } else{
+//             res.status(404).json({error: "salesAgent is not found."})
+//         }
+//     }  catch(error){
+//         res.status(500).json({error: "An unexpected error occurred on the server."})
+//     }
+// })
+
+
+app.get("/salesAgent/getSalesAgent/:agentId", async (req, res) => {
     try{
-        const salesAgentById = await getAgentById(req.params.agentId)
-        console.log(salesAgentById, "checking sales agent");
-        if(salesAgentById){
-            req.json(salesAgentById)
+        const salesAgent = await getAgentById(req.params.agentId)
+        console.log(salesAgent, "salesagent")
+
+        if(salesAgent){
+            res.json(salesAgent)
         } else{
-            res.status(404).json({error: "salesAgent is not found."})
+            res.status(404).json({error: "Sales agent is not found."})
         }
-    }  catch(error){
-        res.status(500).json({error: "An unexpected error occurred on the server."})
+    } catch(error){
+        res.status(500).json({error:  "Failed to fetch Sales Agent."})
     }
 })
 
 
 
-
-
-
-
-
-
-
-
-
-
-const commentData = {
-  lead: "68e4b4e7c0f4feb4e6795923", //lead Id. 
-  author: "68e49fdf24fcc90c8e77b5bb",  // Sales Agent ID
-  commentText: "Reached out to lead, waiting for response."
+//get all comments from the db;
+async function getAllComments(){
+try{
+const allComments = await Comment.find();
+console.log(allComments, "all comments")
+return allComments;
+} catch(error){
+    throw error
+}
 }
 
-const addComment = async () => {
-    try{
-        const newComment = new Comment(commentData);
-        await newComment.save();
-        console.log(newComment, "Comment added successfully.")
-    } catch(error){
-        console.log("error", error)
-    }
-};
+// getAllComments()
 
-// addComment();
+// api to get all comments;
+app.get("/comments", async (req, res) => {
+    try{
+        const comments = await getAllComments();
+        if(comments){
+            res.json(comments)
+        } else{
+            res.status(404).json({error: "Comment not found."})
+        }
+    } catch(error){
+        res.status(500).json({error: "{ error: 'Failed to fetch comments.' }"})
+    }
+})
+
+
+//get comments by id; 
+async function getCommentsById(commentsId){
+    try{
+        const commentsById = await Comment.findById(commentsId);
+        console.log(commentsById)
+        return commentsById;
+    } catch(error){
+        throw error
+    }
+}
+// getCommentsById("68e4ce5699d3c8f7b9bfa0c7");
+
+// api to get comment by id; 
+
+app.get("/comments/:commentsId", async (req, res) => {
+    try{
+        const commentById = await getCommentsById(req.params.commentsId)
+        console.log(commentById);
+        if(commentById){
+            res.json(commentById)
+        } else{
+            res.status(404).json({error: "Comment is not found."})
+        }
+    } catch(error){
+        res.status(500).json({error: "{ error: 'Failed to fetch comments.' }."})
+    }
+})
+
+//Reporting Api;
+//get leads closed last weak; 
+
+// Description: Fetches all leads that were closed (status: Closed) in the last 7 days.
+
+// app.get("/leads/report/last-week", async (req, res) => {
+//     try{
+//         const sevenDaysAgo = new Date();
+//         console.log(sevenDaysAgo, "sevendaysago")
+//         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); 
+        
+//         const closedLeads = await Lead.find({
+//             status: "Closed",
+//             closedAt: {$gte: sevenDaysAgo}   //In the code, $gte is a MongoDB query operator that means "greater than or equal to".
+//         });
+        
+//         if(closedLeads){
+//             res.json(closedLeads)
+//         } else{
+//             res.status(404).json({error: "Lead not found."})
+//         }
+//     } catch(error){
+//         res.status(500).json({ error: 'Failed to fetch closed Leads' })
+//     }
+// })
+
+async function closedLeadsInSevenDays(){
+    try{
+    const sevenDaysAgo = new Date();
+    console.log(sevenDaysAgo, "sevendaysago")
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); 
+
+    const closedLeads = await Lead.find({
+            status: "Closed",
+            closedAt: {$gte: sevenDaysAgo}   //In the code, $gte is a MongoDB query operator that means "greater than or equal to".
+        });
+    console.log(closedLeads, "closedLeads")
+    return closedLeads
+    } catch(error){
+        throw error
+    }     
+}
+
+closedLeadsInSevenDays();
+
+
+//Get lead by status;
+async function getLeadsByStatus(leadByStatus){
+    try{
+        const leadStatus = await Lead.find({status: leadByStatus})
+        console.log(leadStatus)
+        return leadStatus
+    }
+    catch(error){
+        throw error
+    }
+}
+
+getLeadsByStatus("Closed")
+
+// api to get leads by status.
+app.get("/leads/status/:leadByStatus", async(req, res) => {
+    try{
+        const leadsStatus = await getLeadsByStatus(req.params.leadByStatus)
+        if(leadsStatus){
+            res.json(leadsStatus)
+        } else{
+            res.status(404).json({error: "Lead not found."})
+        }
+    } catch(error){
+            res.status(500).json({error: "Failed to fetch Lead by Status."})
+        }
+})
+
+
+
 
 
 
