@@ -8,7 +8,6 @@ const Tag = require("./models/tag.model");
 const express = require("express");
 const cors = require("cors");
 
-
 const app = express();
 app.use(cors());
 
@@ -39,8 +38,6 @@ initializeDB();
 
 // seedData();
 
-
-
 // I was seeding data for lead from lead.json
 // const leadjsonData = fs.readFileSync("./jsons/lead.json", "utf-8");
 // const leads = JSON.parse(leadjsonData);
@@ -67,8 +64,6 @@ initializeDB();
 
 // seedData();
 
-
-
 // const leadData = {
 //     name: "Acme Corp",
 //     source: "Referral",
@@ -78,7 +73,6 @@ initializeDB();
 //     timeToClose: 30,
 //     priority: "High"
 // };
-
 
 // const addLead = async () => {
 //     try{
@@ -92,15 +86,12 @@ initializeDB();
 
 // // addLead();
 
-
-
-//adding comment data in the database; 
+//adding comment data in the database;
 // const commentData = {
 //   lead: "68e4b4e7c0f4feb4e6795923", //lead Id. (Acme Corp)
 //   author: "68e49fdf24fcc90c8e77b5bb",  // Sales Agent ID  (Frank's Id)
 //   commentText: "Reached out to lead, waiting for response."
 // }
-
 
 // const commentData2 = {
 //     lead: "68e50c6f2cfcff7485308b23", //lead Id.  (Emily Rivera)
@@ -118,8 +109,7 @@ initializeDB();
 //     }
 // };
 
-// // addComment();   
-
+// // addComment();
 
 // const closedLead = {
 //     name: "David Chen",
@@ -142,11 +132,10 @@ initializeDB();
 //     }
 // };
 
-// // addClosedLead();  
-
+// // addClosedLead();
 
 // // add tags;
-// const newTags2 = 
+// const newTags2 =
 //     // {
 //     // name: "High value"
 //     // }
@@ -166,203 +155,186 @@ initializeDB();
 // }
 // // addNewTag();
 
-
-
-
-
 //get all leads;
 
 const getAllLeads = async () => {
-    try{
-        const allLeads = await Lead.find().populate("salesAgent"); 
-        // console.log("All Leads: ", allLeads);
-        return allLeads
-    } catch(error){
-        console.log("error", error)
-    }
-}
+  try {
+    const allLeads = await Lead.find().populate("salesAgent");
+    // console.log("All Leads: ", allLeads);
+    return allLeads;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
 
 // getAllLeads();
 
-
 // api for getting all leads;
-app.get("/leads", async(req, res) => {
-    try{
-        const leadsAll = await getAllLeads()
-        if(leadsAll){
-            res.json(leadsAll)
-        } else{
-            res.status(404).json({ error: "Lead not found."})
-        }
-    } catch(error){
-        res.status(500).json({error: "Failed to fetch Leads."})
+app.get("/leads", async (req, res) => {
+  try {
+    const leadsAll = await getAllLeads();
+    if (leadsAll) {
+      res.json(leadsAll);
+    } else {
+      res.status(404).json({ error: "Lead not found." });
     }
-})
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch Leads." });
+  }
+});
 
 // get lead by Id;
-async function getLeadById(leadId){
-    try{
-        const getLead = await Lead.findById(leadId);
-        console.log(getLead);
-        return getLead;
-    } catch(error){
-        throw error
-    }
+async function getLeadById(leadId) {
+  try {
+    const getLead = await Lead.findById(leadId);
+    console.log(getLead);
+    return getLead;
+  } catch (error) {
+    throw error;
+  }
 }
 
 // getLeadById("68e50c6f2cfcff7485308b24")
 
 // api to get lead by Id
-app.get("/leads/:leadId", async(req, res) => {
-    try{
-        const leadById = await getLeadById(req.params.leadId)
-        console.log(leadById)
+app.get("/leads/:leadId", async (req, res) => {
+  try {
+    const leadById = await getLeadById(req.params.leadId);
+    console.log(leadById);
 
-        if(leadById){
-            res.json(leadById)
-        } else{
-            res.status(404).json({error: 'Lead not found.'})
-        }
-    } catch(error){
-        res.status(500).json({error: "Failed to fetch Lead by Id."})
+    if (leadById) {
+      res.json(leadById);
+    } else {
+      res.status(404).json({ error: "Lead not found." });
     }
-})
-
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch Lead by Id." });
+  }
+});
 
 //Get lead by status;
-async function getLeadsByStatus(leadByStatus){
-    try{
-        const leadStatus = await Lead.find({status: leadByStatus})
-        console.log(leadStatus)
-        return leadStatus
-    }
-    catch(error){
-        throw error
-    }
+async function getLeadsByStatus(leadByStatus) {
+  try {
+    const leadStatus = await Lead.find({ status: leadByStatus });
+    console.log(leadStatus);
+    return leadStatus;
+  } catch (error) {
+    throw error;
+  }
 }
 
 // getLeadsByStatus("New")
 
 // api to get leads by status.
-app.get("/leads/status/:leadByStatus", async(req, res) => {
-    try{
-        const leadsStatus = await getLeadsByStatus(req.params.leadByStatus)
-        if(leadsStatus){
-            res.json(leadsStatus)
-        } else{
-            res.status(404).json({error: "Lead not found."})
-        }
-    } catch(error){
-            res.status(500).json({error: "Failed to fetch Lead by Status."})
-        }
-})
-
+app.get("/leads/status/:leadByStatus", async (req, res) => {
+  try {
+    const leadsStatus = await getLeadsByStatus(req.params.leadByStatus);
+    if (leadsStatus) {
+      res.json(leadsStatus);
+    } else {
+      res.status(404).json({ error: "Lead not found." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch Lead by Status." });
+  }
+});
 
 // get leads by tags.
-async function leadByTags(tag){
-    try{
-        const leadTags = await Lead.find({tags: tag})  
-        console.log(leadTags)  
-        return leadTags;
-    }
-    catch(error){
-        throw error
-    }
+async function leadByTags(tag) {
+  try {
+    const leadTags = await Lead.find({ tags: tag });
+    console.log(leadTags);
+    return leadTags;
+  } catch (error) {
+    throw error;
+  }
 }
 // leadByTags("Follow-up")
 
 // api to get lead by tags.
 
-app.get("/leads/tags/:tag", async(req, res) => {
-    try{
-        const leadTag = await leadByTags(req.params.tag)
-        console.log(leadTag, "lead Tags")
-        if(leadTag.length != 0){
-            res.json(leadTag)
-        } else{
-             res.status(404).json({error: ".Lead not found."})
-        }
-    } catch(error){
-        res.status(500).json({error: "Failed to fetch Lead by Tags."})
+app.get("/leads/tags/:tag", async (req, res) => {
+  try {
+    const leadTag = await leadByTags(req.params.tag);
+    console.log(leadTag, "lead Tags");
+    if (leadTag.length != 0) {
+      res.json(leadTag);
+    } else {
+      res.status(404).json({ error: ".Lead not found." });
     }
-})
-
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch Lead by Tags." });
+  }
+});
 
 // get leads by source
 
-async function getLeadBySource(leadBySource){
-    try{
-        const sourceLead = await Lead.find({source: leadBySource})
-        console.log(sourceLead)
-        return sourceLead;
-    } catch(error){
-        throw error
-    }
+async function getLeadBySource(leadBySource) {
+  try {
+    const sourceLead = await Lead.find({ source: leadBySource });
+    console.log(sourceLead);
+    return sourceLead;
+  } catch (error) {
+    throw error;
+  }
 }
 
 // getLeadBySource("Referral");
 
 //api to get lead by source;
 
-app.get("/leads/source/:leadBySource", async(req, res) => {
-    try{
-        const leadsSource = await getLeadBySource(req.params.leadBySource)
-        if(leadsSource){
-            res.json(leadsSource)
-        } else{
-            res.status(404).json({error: "Lead not found."})
-        }
-    } catch(error){
-        res.status(500).json({error: "Failed to fetch Lead by Source."})
+app.get("/leads/source/:leadBySource", async (req, res) => {
+  try {
+    const leadsSource = await getLeadBySource(req.params.leadBySource);
+    if (leadsSource) {
+      res.json(leadsSource);
+    } else {
+      res.status(404).json({ error: "Lead not found." });
     }
-})
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch Lead by Source." });
+  }
+});
 
+// get All Sales agent*******;
 
-
-
-// get All Sales agent*******; 
-
-async function getAllSalesAgent(){
-    try{
-        const allSalesAgent = await SalesAgent.find()
-        // console.log(allSalesAgent)
-        return allSalesAgent
-    } catch(error){
-        console.log("error", error)
-    }
+async function getAllSalesAgent() {
+  try {
+    const allSalesAgent = await SalesAgent.find();
+    // console.log(allSalesAgent)
+    return allSalesAgent;
+  } catch (error) {
+    console.log("error", error);
+  }
 }
 
 // getAllSalesAgent();
 
-
-app.get("/salesAgent", async(req, res) => {
-    try{
-        const salesAgents = await getAllSalesAgent();
-        // console.log(salesAgents, "salesAgentslslje")
-        if(salesAgents){
-            res.json(salesAgents)
-        } else{
-             res.status(400).json({ error: "Sales agent is not found."})
-        }
-    } catch(error){
-        res.status(500).json({error: "Failed to fetch Sales Agent."})
+app.get("/salesAgent", async (req, res) => {
+  try {
+    const salesAgents = await getAllSalesAgent();
+    // console.log(salesAgents, "salesAgentslslje")
+    if (salesAgents) {
+      res.json(salesAgents);
+    } else {
+      res.status(400).json({ error: "Sales agent is not found." });
     }
-})
-
-
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch Sales Agent." });
+  }
+});
 
 // get salesAgent by Id;
-async function getAgentById(agentId){
-    try{
-        const getSalesAgent = await SalesAgent.findById(agentId);
-        // console.log(getSalesAgent, "getsales agetnekrtn");
-        return getSalesAgent;
-    } catch(error){
-        throw error
-    }
+async function getAgentById(agentId) {
+  try {
+    const getSalesAgent = await SalesAgent.findById(agentId);
+    // console.log(getSalesAgent, "getsales agetnekrtn");
+    return getSalesAgent;
+  } catch (error) {
+    throw error;
+  }
 }
 // getAgentById("68e49fdf24fcc90c8e77b5bc")
-
 
 //have to chek it;......................
 // api to get salesAgent by Id;
@@ -381,182 +353,172 @@ async function getAgentById(agentId){
 //     }
 // })
 
-
 app.get("/salesAgent/getSalesAgent/:agentId", async (req, res) => {
-    try{
-        const salesAgent = await getAgentById(req.params.agentId)
-        console.log(salesAgent, "salesagent")
+  try {
+    const salesAgent = await getAgentById(req.params.agentId);
+    console.log(salesAgent, "salesagent");
 
-        if(salesAgent){
-            res.json(salesAgent)
-        } else{
-            res.status(404).json({error: "Sales agent is not found."})
-        }
-    } catch(error){
-        res.status(500).json({error:  "Failed to fetch Sales Agent."})
+    if (salesAgent) {
+      res.json(salesAgent);
+    } else {
+      res.status(404).json({ error: "Sales agent is not found." });
     }
-})
-
-
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch Sales Agent." });
+  }
+});
 
 //get all comments from the db;
-async function getAllComments(){
-try{
-const allComments = await Comment.find();
-console.log(allComments, "all comments")
-return allComments;
-} catch(error){
-    throw error
-}
+async function getAllComments() {
+  try {
+    const allComments = await Comment.find();
+    console.log(allComments, "all comments");
+    return allComments;
+  } catch (error) {
+    throw error;
+  }
 }
 
 // getAllComments()
 
 // api to get all comments;
 app.get("/comments", async (req, res) => {
-    try{
-        const comments = await getAllComments();
-        if(comments){
-            res.json(comments)
-        } else{
-            res.status(404).json({error: "Comment not found."})
-        }
-    } catch(error){
-        res.status(500).json({error: "{ error: 'Failed to fetch comments.' }"})
+  try {
+    const comments = await getAllComments();
+    if (comments) {
+      res.json(comments);
+    } else {
+      res.status(404).json({ error: "Comment not found." });
     }
-})
+  } catch (error) {
+    res.status(500).json({ error: "{ error: 'Failed to fetch comments.' }" });
+  }
+});
 
-
-//get comments by id; 
-async function getCommentsById(commentsId){
-    try{
-        const commentsById = await Comment.findById(commentsId);
-        console.log(commentsById)
-        return commentsById;
-    } catch(error){
-        throw error
-    }
+//get comments by id;
+async function getCommentsById(commentsId) {
+  try {
+    const commentsById = await Comment.findById(commentsId);
+    console.log(commentsById);
+    return commentsById;
+  } catch (error) {
+    throw error;
+  }
 }
 // getCommentsById("68e4ce5699d3c8f7b9bfa0c7");
 
-// api to get comment by id; 
+// api to get comment by id;
 
 app.get("/comments/:commentsId", async (req, res) => {
-    try{
-        const commentById = await getCommentsById(req.params.commentsId)
-        console.log(commentById);
-        if(commentById){
-            res.json(commentById)
-        } else{
-            res.status(404).json({error: "Comment is not found."})
-        }
-    } catch(error){
-        res.status(500).json({error: "{ error: 'Failed to fetch comments.' }."})
+  try {
+    const commentById = await getCommentsById(req.params.commentsId);
+    console.log(commentById);
+    if (commentById) {
+      res.json(commentById);
+    } else {
+      res.status(404).json({ error: "Comment is not found." });
     }
-})
+  } catch (error) {
+    res.status(500).json({ error: "{ error: 'Failed to fetch comments.' }." });
+  }
+});
 
 //Reporting Api;
-//get leads closed last weak; 
+//get leads closed last weak;
 // Description: Fetches all leads that were closed (status: Closed) in the last 7 days.
 //Get closed leads within last 7 days.
 
-async function getClosedLeads(){
-    try{
-        const sevenDaysAgo = new Date();
-        console.log(sevenDaysAgo, "sevendaysago")
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-        const closedLeads = await Lead.find({status: "Closed", closedAt: {$gte: sevenDaysAgo}});   
-        console.log(closedLeads, "checking closed leads. ");
-        return closedLeads;
-    }   
-    catch(error){
-        throw error;
-    }
+async function getClosedLeads() {
+  try {
+    const sevenDaysAgo = new Date();
+    console.log(sevenDaysAgo, "sevendaysago");
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const closedLeads = await Lead.find({
+      status: "Closed",
+      closedAt: { $gte: sevenDaysAgo },
+    });
+    console.log(closedLeads, "checking closed leads. ");
+    return closedLeads;
+  } catch (error) {
+    throw error;
+  }
 }
 
 // getClosedLeads()
 
-// api to get closed leads within last Week; 
-app.get("/leads/report/lastWeek", async(req, res) => {
-    try{
+// api to get closed leads within last Week;
+app.get("/leads/report/lastWeek", async (req, res) => {
+  try {
     const leadClosed = await getClosedLeads();
-    console.log(leadClosed, "lead Closed")
-    if(leadClosed){
-        res.json(leadClosed);
-    } else{
-        res.status(404).json({error: "Closed leads not found."})
+    console.log(leadClosed, "lead Closed");
+    if (leadClosed) {
+      res.json(leadClosed);
+    } else {
+      res.status(404).json({ error: "Closed leads not found." });
     }
-} catch(error){
-    res.status(500).json({error: "Failed to fetch closed leads."})
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch closed leads." });
+  }
+});
+
+// Get Total Leads in Pipeline**
+// GET /report/pipeline`
+// Description**: Fetches the total number of leads currently in the pipeline (all statuses except `Closed`).
+
+async function getTotalLeadsInPipeline() {
+  try {
+    const totalLeadsInPipeLine = await Lead.countDocuments({
+      status: { $ne: "Closed" },
+    });
+    console.log(totalLeadsInPipeLine, "totalLeadsInPipeLine....klfjkdljkdjfk");
+    return totalLeadsInPipeLine;
+  } catch (error) {
+    console.log(error, "error");
+  }
 }
-})
-
-
-    // Get Total Leads in Pipeline**
-    // GET /report/pipeline`
-    // Description**: Fetches the total number of leads currently in the pipeline (all statuses except `Closed`).
-
-    async function getTotalLeadsInPipeline(){
-        try{
-            const totalLeadsInPipeLine = await Lead.countDocuments({ status: {$ne: "Closed"}});
-            console.log(totalLeadsInPipeLine, "totalLeadsInPipeLine....klfjkdljkdjfk")
-            return totalLeadsInPipeLine;
-        } catch(error){
-            console.log(error, "error")
-        }
-    }
-    // getTotalLeadsInPipeline();
+// getTotalLeadsInPipeline();
 
 app.get("/leads/report/pipeline", async (req, res) => {
-    try{
-        const totalLeads =  await getTotalLeadsInPipeline();
-        console.log(totalLeads, "leads count")
-        if(totalLeads){
-            res.status(200).json({"totalLeadsInPipeline": totalLeads})
-        } else{
-            res.status(404).json({error: "Total Leads in pipeline is not found."})
-        }
-    } catch(error){
-        res.status(500).json({error: "Cannot fetch total Leads."})
+  try {
+    const totalLeads = await getTotalLeadsInPipeline();
+    console.log(totalLeads, "leads count");
+    if (totalLeads) {
+      res.status(200).json({ totalLeadsInPipeline: totalLeads });
+    } else {
+      res.status(404).json({ error: "Total Leads in pipeline is not found." });
     }
-})
+  } catch (error) {
+    res.status(500).json({ error: "Cannot fetch total Leads." });
+  }
+});
 
 // get all tags;
-const getAllTags = async() => {
-    try{
-        const allTags = await Tag.find()
-        console.log(allTags, "allTags")
-        return allTags;
-    } catch(error){
-        throw error
-    }
-}
+const getAllTags = async () => {
+  try {
+    const allTags = await Tag.find();
+    console.log(allTags, "allTags");
+    return allTags;
+  } catch (error) {
+    throw error;
+  }
+};
 
 // getAllTags();
 
-app.get("/tags", async(req, res) => {
-    try{
-        const tags = await getAllTags();
-        if(tags){
-            res.json(tags)
-        } else{
-            res.status(404).json({error: "Tags not found."})
-        }
-
-    } catch(error){
-        res.status(500).json({error: "Cannot fetch Tags."})
+app.get("/tags", async (req, res) => {
+  try {
+    const tags = await getAllTags();
+    if (tags) {
+      res.json(tags);
+    } else {
+      res.status(404).json({ error: "Tags not found." });
     }
-})
+  } catch (error) {
+    res.status(500).json({ error: "Cannot fetch Tags." });
+  }
+});
 
-
-
-
-
-
-
-
-
-const PORT = 3000
+const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on the port ${PORT}`)
-})
+  console.log(`Server is running on the port ${PORT}`);
+});
