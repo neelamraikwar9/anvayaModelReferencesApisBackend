@@ -3,7 +3,7 @@ const SalesAgent = require("./models/salesAgent.model");
 const Lead = require("./models/lead.model");
 const Comment = require("./models/comment.model");
 const Tag = require("./models/tag.model");
-const fs = require("fs");
+// const fs = require("fs");
 
 const express = require("express");
 const cors = require("cors");
@@ -19,51 +19,51 @@ const corsOptions = {
 
 initializeDB();
 
-const jsonData = fs.readFileSync("./jsons/salesAgent.json", "utf-8");
-const salesAgent = JSON.parse(jsonData);
+// const jsonData = fs.readFileSync("./jsons/salesAgent.json", "utf-8");
+// const salesAgent = JSON.parse(jsonData);
 
-function seedData() {
-  try {
-    for (const saleAgent of salesAgent) {
-      const newSalesAgent = new SalesAgent({
-        name: saleAgent.name,
-        email: saleAgent.email,
-      });
-      console.log(newSalesAgent.name);
-      newSalesAgent.save();
-    }
-  } catch (error) {
-    console.log("Error in seeding the data", error);
-  }
-}
+// function seedData() {
+//   try {
+//     for (const saleAgent of salesAgent) {
+//       const newSalesAgent = new SalesAgent({
+//         name: saleAgent.name,
+//         email: saleAgent.email,
+//       });
+//       console.log(newSalesAgent.name);
+//       newSalesAgent.save();
+//     }
+//   } catch (error) {
+//     console.log("Error in seeding the data", error);
+//   }
+// }
 
 // seedData();
 
 
 
 // I was seeding data for lead from lead.json
-const leadjsonData = fs.readFileSync("./jsons/lead.json", "utf-8");
-const leads = JSON.parse(leadjsonData);
+// const leadjsonData = fs.readFileSync("./jsons/lead.json", "utf-8");
+// const leads = JSON.parse(leadjsonData);
 
-function seedData() {
-  try {
-    for (const lead of leads) {
-      const newLead = new Lead({
-        name: lead.name,
-        source: lead.source,
-        salesAgent: lead.salesAgent,
-        status: lead.status,
-        tags: lead.tags,
-        timeToClose: lead.timeToClose,
-        priority: lead.priority,
-      });
-      console.log(newLead.name, "newLeadName");
-      newLead.save()
-    }
-  } catch (error) {
-    console.log("Error in seeding the data", error);
-  }
-}
+// function seedData() {
+//   try {
+//     for (const lead of leads) {
+//       const newLead = new Lead({
+//         name: lead.name,
+//         source: lead.source,
+//         salesAgent: lead.salesAgent,
+//         status: lead.status,
+//         tags: lead.tags,
+//         timeToClose: lead.timeToClose,
+//         priority: lead.priority,
+//       });
+//       console.log(newLead.name, "newLeadName");
+//       newLead.save()
+//     }
+//   } catch (error) {
+//     console.log("Error in seeding the data", error);
+//   }
+// }
 
 // seedData();
 
