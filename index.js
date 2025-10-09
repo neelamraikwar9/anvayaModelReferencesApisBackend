@@ -7,7 +7,7 @@ const Tag = require("./models/tag.model");
 
 const express = require("express");
 const cors = require("cors");
-const react = require("react");
+
 
 const app = express();
 app.use(cors());
@@ -69,102 +69,102 @@ initializeDB();
 
 
 
-const leadData = {
-    name: "Acme Corp",
-    source: "Referral",
-    salesAgent: "68e49fdf24fcc90c8e77b5bb",
-    status: "New",
-    tags: ["High Value", "Follow-up"],
-    timeToClose: 30,
-    priority: "High"
-};
+// const leadData = {
+//     name: "Acme Corp",
+//     source: "Referral",
+//     salesAgent: "68e49fdf24fcc90c8e77b5bb",
+//     status: "New",
+//     tags: ["High Value", "Follow-up"],
+//     timeToClose: 30,
+//     priority: "High"
+// };
 
 
-const addLead = async () => {
-    try{
-        const newLead = new Lead(leadData);
-        await newLead.save();
-        console.log(newLead, "Lead added successfully.")
-    } catch(error){
-        console.log("Error", error);
-    }
-};
+// const addLead = async () => {
+//     try{
+//         const newLead = new Lead(leadData);
+//         await newLead.save();
+//         console.log(newLead, "Lead added successfully.")
+//     } catch(error){
+//         console.log("Error", error);
+//     }
+// };
 
-// addLead();
+// // addLead();
 
 
 
 //adding comment data in the database; 
-const commentData = {
-  lead: "68e4b4e7c0f4feb4e6795923", //lead Id. (Acme Corp)
-  author: "68e49fdf24fcc90c8e77b5bb",  // Sales Agent ID  (Frank's Id)
-  commentText: "Reached out to lead, waiting for response."
-}
+// const commentData = {
+//   lead: "68e4b4e7c0f4feb4e6795923", //lead Id. (Acme Corp)
+//   author: "68e49fdf24fcc90c8e77b5bb",  // Sales Agent ID  (Frank's Id)
+//   commentText: "Reached out to lead, waiting for response."
+// }
 
 
-const commentData2 = {
-    lead: "68e50c6f2cfcff7485308b23", //lead Id.  (Emily Rivera)
-    author: "68e49fdf24fcc90c8e77b5be",  // Sales Agent ID (John Doe)
-    commentText: "Lead interested, scheduled a meeting.",
-}
+// const commentData2 = {
+//     lead: "68e50c6f2cfcff7485308b23", //lead Id.  (Emily Rivera)
+//     author: "68e49fdf24fcc90c8e77b5be",  // Sales Agent ID (John Doe)
+//     commentText: "Lead interested, scheduled a meeting.",
+// }
 
-const addComment = async () => {
-    try{
-        const newComment = new Comment(commentData2);
-        await newComment.save();
-        console.log(newComment, "Comment added successfully.")
-    } catch(error){
-        console.log("error", error)
-    }
-};
+// const addComment = async () => {
+//     try{
+//         const newComment = new Comment(commentData2);
+//         await newComment.save();
+//         console.log(newComment, "Comment added successfully.")
+//     } catch(error){
+//         console.log("error", error)
+//     }
+// };
 
-// addComment();   
-
-
-const closedLead = {
-    name: "David Chen",
-    source: "Cold Call",
-    salesAgent: "68e49fdf24fcc90c8e77b5bc",
-    status: "Closed",
-    tags: ["High Value", "Follow-up"],
-    timeToClose: 60,
-    priority: "Medium",
-    closedAt: "2025-07-10"
-  }
-
-  const addClosedLead = async () => {
-    try{
-        const leadNew = new Lead(closedLead);
-        await leadNew.save();
-        console.log(leadNew, "Comment added successfully.")
-    } catch(error){
-        console.log("error", error)
-    }
-};
-
-// addClosedLead();  
+// // addComment();   
 
 
-// add tags;
-const newTags2 = 
-    // {
-    // name: "High value"
-    // }
+// const closedLead = {
+//     name: "David Chen",
+//     source: "Cold Call",
+//     salesAgent: "68e49fdf24fcc90c8e77b5bc",
+//     status: "Closed",
+//     tags: ["High Value", "Follow-up"],
+//     timeToClose: 60,
+//     priority: "Medium",
+//     closedAt: "2025-07-10"
+//   }
 
-    {
-    name: "Follow-Up"
-    }
+//   const addClosedLead = async () => {
+//     try{
+//         const leadNew = new Lead(closedLead);
+//         await leadNew.save();
+//         console.log(leadNew, "Comment added successfully.")
+//     } catch(error){
+//         console.log("error", error)
+//     }
+// };
 
-const addNewTag = async () => {
-    try{
-    const newTag = new Tag(newTags2);
-    await newTag.save();
-    console.log(newTag, "Tag added successfully.")
-    } catch(error){
-        throw error
-    }
-}
-// addNewTag();
+// // addClosedLead();  
+
+
+// // add tags;
+// const newTags2 = 
+//     // {
+//     // name: "High value"
+//     // }
+
+//     {
+//     name: "Follow-Up"
+//     }
+
+// const addNewTag = async () => {
+//     try{
+//     const newTag = new Tag(newTags2);
+//     await newTag.save();
+//     console.log(newTag, "Tag added successfully.")
+//     } catch(error){
+//         throw error
+//     }
+// }
+// // addNewTag();
 
 
 
