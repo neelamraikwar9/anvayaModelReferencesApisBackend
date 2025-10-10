@@ -4,12 +4,14 @@ const Lead = require("./models/lead.model");
 const Comment = require("./models/comment.model");
 const Tag = require("./models/tag.model");
 // const fs = require("fs");
-
 const express = require("express");
+const app = express();
+
 const cors = require("cors");
 
-const app = express();
 app.use(cors());
+
+app.use(express.json()); //middleware
 
 const corsOptions = {
   origin: "*",
@@ -155,6 +157,44 @@ initializeDB();
 // }
 // // addNewTag();
 
+//POST Method;
+//api to post leads in the database; overall post route for leads.
+
+// lead to put in request body;
+// {
+//   "name": "Step Up",
+//   "source": "Email",
+//   "salesAgent": "68e8c8c399ce051eacc8976e",   // Sales Agent ID
+//   "status": "Qualified",
+//   "tags": ["High Value"],
+//   "timeToClose": 40,
+//   "priority": "High"
+// }
+
+async function createLead(newLead) {
+  try {
+    const lead = new Lead(newLead);
+    const saveLead = await lead.save();
+    console.log(saveLead);
+    return saveLead;
+  } catch (error) {
+    throw error;
+  }
+}
+
+app.post("/leads", async (req, res) => {
+  try {
+    const newLead = req.body;
+    const savedLead = await createLead(newLead);
+    console.log(savedLead);
+    res
+      .status(201)
+      .json({ message: "Lead crated successfully.", lead: savedLead });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to create a Lead. " });
+  }
+});
+
 //get all leads;
 
 const getAllLeads = async () => {
@@ -169,6 +209,7 @@ const getAllLeads = async () => {
 
 // getAllLeads();
 
+// GET Method;
 // api for getting all leads;
 app.get("/leads", async (req, res) => {
   try {
@@ -293,6 +334,56 @@ app.get("/leads/source/:leadBySource", async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch Lead by Source." });
+  }
+});
+
+//post new Sales Agent;
+
+// async function createSalesAgent(newAgent){
+//   try{
+//     const agent = new SalesAgent(newAgent);
+//     const savedAgent = await agent.save();
+//     return savedAgent;
+//   } catch(error){
+//     throw error;
+//   }
+// }
+
+//api to post new sales agent;
+
+// app.post("/salesAgent", async (req, res) => {
+//   try{
+//     const saveAgent = await createSalesAgent(newAgent);
+//     console.log(saveAgent)
+// res.status(201).json({message: "Sales Agent added successfully.", agent : savedAgent})
+//     // res.status(201).json({message: "Movie added successfully.", movie: savedMovie})
+//   } catch(error){
+//     res.status(500).json({error: "Failed to add Sales Agent."})
+//   }
+// })
+
+//api to add/ post sales agent;
+async function createSalesAgent(newAgent) {
+  try {
+    const agent = new SalesAgent(newAgent);
+    const saveAgent = await agent.save();
+    console.log(saveAgent, "save agent");
+    return saveAgent;
+  } catch (error) {
+    throw error;
+  }
+}
+
+app.post("/salesAgent", async (req, res) => {
+  try {
+    const newAgent = req.body;
+    const savedAgent = await createSalesAgent(newAgent);
+    console.log(savedAgent, "checking savedAgent");
+    res
+      .status(201)
+      .json({ message: "Sales Agent added successfully.", agent: savedAgent });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to add Sales Agent." });
   }
 });
 
