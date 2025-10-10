@@ -459,6 +459,39 @@ app.get("/salesAgent/getSalesAgent/:agentId", async (req, res) => {
   }
 });
 
+//api to post/Add comments;
+
+// comment to post;
+// {
+//     "lead": "68e8ce0c481cf6a6f5d7dc7e",
+//     "author": "68e8c8c399ce051eacc8976e",
+//     "commentText": "Lead interested, join a meeting."
+// }
+
+const addNewComment = async (newComment) => {
+  try {
+    const comment = new Comment(newComment);
+    const savedComm = await comment.save();
+    console.log(savedComm);
+    return savedComm;
+  } catch (error) {
+    throw error;
+  }
+};
+
+app.post("/comments", async (req, res) => {
+  try {
+    const newComment = req.body;
+    const newComm = await addNewComment(newComment);
+    console.log(newComm);
+    res
+      .status(201)
+      .json({ message: "Comment added successfully.", comment: newComm });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to add a Comment." });
+  }
+});
+
 //get all comments from the db;
 async function getAllComments() {
   try {
@@ -606,6 +639,60 @@ app.get("/tags", async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: "Cannot fetch Tags." });
+  }
+});
+
+//api for update Lead;
+//update lead by changing status;
+async function updateLeadByStatus(leadID, dataToUpdate) {
+  try {
+    const updateLead = await Lead.findByIdAndUpdate(leadID, dataToUpdate, {
+      new: true,
+    });
+    return updateLead;
+  } catch (error) {
+    console.log("Error in updating Lead status.", error);
+  }
+}
+
+// updateLeadByStatus("68e8ce0c481cf6a6f5d7dc7e", {status: "New"})
+
+app.post("/leads/:leadID", async (req, res) => {
+  try {
+    const updatedLead = await updateLeadByStatus(req.params.leadID, req.body);
+    if (updatedLead) {
+      res.status(200).json({
+        message: "Lead updated successfully.",
+        updateLeadByStatus: updatedLead,
+      });
+    } else {
+      res.status(404).json({ error: "Lead not found." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update Lead." });
+  }
+});
+
+// api for deleting a lead;
+async function deleteLead(ledId) {
+  try {
+    const leadDelete = await Lead.findByIdAndDelete(ledId);
+    console.log(leadDelete, "Lead deleted successfully.");
+    return leadDelete;
+  } catch (error) {
+    console.log(error);
+  }
+}
+// deleteLead("68e8ccc1a9f8b416043842d7");
+
+app.delete("/leads/:ledId", async (req, res) => {
+  try {
+    const deleteLed = deleteLead(req.params.ledId);
+    if (deleteLed) {
+      res.status(200).json({ message: "Lead deleted successfully." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete Lead." });
   }
 });
 
