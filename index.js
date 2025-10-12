@@ -191,7 +191,8 @@ app.post("/leads", async (req, res) => {
       .status(201)
       .json({ message: "Lead crated successfully.", lead: savedLead });
   } catch (error) {
-    res.status(500).json({ error: "Failed to create a Lead. " });
+    console.error("Error creating lead:", error); // log stack trace and message
+    res.status(500).json({ error: "Failed to create a Lead." });
   }
 });
 
@@ -495,7 +496,7 @@ app.post("/comments", async (req, res) => {
 //get all comments from the db;
 async function getAllComments() {
   try {
-    const allComments = await Comment.find();
+    const allComments = await Comment.find().populate("salesAgent");
     console.log(allComments, "all comments");
     return allComments;
   } catch (error) {
