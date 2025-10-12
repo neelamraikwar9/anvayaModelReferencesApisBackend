@@ -496,7 +496,7 @@ app.post("/comments", async (req, res) => {
 //get all comments from the db;
 async function getAllComments() {
   try {
-    const allComments = await Comment.find().populate("salesAgent");
+    const allComments = await Comment.find().populate("author");
     console.log(allComments, "all comments");
     return allComments;
   } catch (error) {
