@@ -281,6 +281,36 @@ app.get("/leads/status/:leadByStatus", async (req, res) => {
   }
 });
 
+
+//get leads by sales agent; 
+async function getLeadsByAgent(salesAgentId) {
+  try{
+    const leadByAgent = await Lead.find({salesAgent : salesAgentId});
+    console.log(leadByAgent, "lead by slaes agnt");
+    return leadByAgent;
+  } catch(error){
+    throw error;
+  }
+}
+
+// getLeadsByAgent("68e49fdf24fcc90c8e77b5bc");
+
+// api to get lead by sales agent;
+
+app.get("/leads/agent/:salesAgentId", async (req, res) => {
+  try{
+    const leadByAgentId = await getLeadsByAgent(req.params.salesAgentId);
+    console.log(leadByAgentId, "leadbysagentId")
+    if(leadByAgentId.length > 0) {
+      res.json(leadByAgentId);
+    } else{
+      res.status(404).json({error: "Lead not found."});
+    }
+  } catch(error){
+    res.status(500).json({error: "Failed to fetch Lead by salesAgent Id."});
+  }
+});
+
 // get leads by tags.
 async function leadByTags(tag) {
   try {
