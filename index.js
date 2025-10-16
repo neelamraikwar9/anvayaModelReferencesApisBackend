@@ -620,7 +620,7 @@ async function getClosedLeads() {
   }
 }
 
-getClosedLeads()
+// getClosedLeads()
 
 // api to get closed leads within last Week;
 app.get("/leads/report/lastWeek", async (req, res) => {
@@ -667,6 +667,34 @@ app.get("/leads/report/pipeline", async (req, res) => {
     res.status(500).json({ error: "Cannot fetch total Leads." });
   }
 });
+
+//get closed leads in the pipeline;
+const closedLeadInPipeline = async() => {
+  try{
+    const totalClosedLead = await Lead.countDocuments({status: "Closed" })
+    console.log(totalClosedLead, "totalClosedLead")
+    return totalClosedLead;
+  } catch(error){
+    console.log(error, "error")
+  }
+}
+
+// closedLeadInPipeline();
+
+app.get("/leads/report/closedLeads/pipeline", async (req, res) => {
+  try{
+    const closedLeads = await closedLeadInPipeline();
+    console.log(closedLeads, "closedLeads");
+    if(closedLeads){
+      res.status(200).json({totalClosedLeadsInPipeline: closedLeads});
+    } else{
+      res.status(404).json({error: "Total Closed Leads in pipeline is not found." })
+    }
+  } catch(error){
+    res.status(500).json({error: "Cannot fetch total Closed Leads." })
+  }
+})
+
 
 // get all tags;
 const getAllTags = async () => {
