@@ -286,7 +286,9 @@ app.get("/leads/status/:leadByStatus", async (req, res) => {
 //get leads by sales agent;
 async function getLeadsByAgent(salesAgentId) {
   try {
-    const leadByAgent = await Lead.find({ salesAgent: salesAgentId });
+    const leadByAgent = await Lead.find({ salesAgent: salesAgentId }).populate(
+      "salesAgent"
+    );
     console.log(leadByAgent, "lead by slaes agnt");
     return leadByAgent;
   } catch (error) {
