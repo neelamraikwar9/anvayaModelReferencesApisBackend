@@ -257,7 +257,9 @@ app.get("/leads/:leadId", async (req, res) => {
 //Get lead by status;
 async function getLeadsByStatus(leadByStatus) {
   try {
-    const leadStatus = await Lead.find({ status: leadByStatus });
+    const leadStatus = await Lead.find({ status: leadByStatus }).populate(
+      "salesAgent"
+    );
     console.log(leadStatus);
     return leadStatus;
   } catch (error) {
@@ -265,7 +267,7 @@ async function getLeadsByStatus(leadByStatus) {
   }
 }
 
-// getLeadsByStatus("New")
+getLeadsByStatus("New");
 
 // api to get leads by status.
 app.get("/leads/status/:leadByStatus", async (req, res) => {
@@ -281,14 +283,13 @@ app.get("/leads/status/:leadByStatus", async (req, res) => {
   }
 });
 
-
-//get leads by sales agent; 
+//get leads by sales agent;
 async function getLeadsByAgent(salesAgentId) {
-  try{
-    const leadByAgent = await Lead.find({salesAgent : salesAgentId});
+  try {
+    const leadByAgent = await Lead.find({ salesAgent: salesAgentId });
     console.log(leadByAgent, "lead by slaes agnt");
     return leadByAgent;
-  } catch(error){
+  } catch (error) {
     throw error;
   }
 }
@@ -298,16 +299,16 @@ async function getLeadsByAgent(salesAgentId) {
 // api to get lead by sales agent;
 
 app.get("/leads/agent/:salesAgentId", async (req, res) => {
-  try{
+  try {
     const leadByAgentId = await getLeadsByAgent(req.params.salesAgentId);
-    console.log(leadByAgentId, "leadbysagentId")
-    if(leadByAgentId.length > 0) {
+    console.log(leadByAgentId, "leadbysagentId");
+    if (leadByAgentId.length > 0) {
       res.json(leadByAgentId);
-    } else{
-      res.status(404).json({error: "Lead not found."});
+    } else {
+      res.status(404).json({ error: "Lead not found." });
     }
-  } catch(error){
-    res.status(500).json({error: "Failed to fetch Lead by salesAgent Id."});
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch Lead by salesAgent Id." });
   }
 });
 
@@ -605,8 +606,7 @@ async function getClosedLeads() {
   try {
     const today = new Date();
     console.log(today, "today");
-    const sevenDaysAgo = 
-    new Date(today);
+    const sevenDaysAgo = new Date(today);
     sevenDaysAgo.setDate(today.getDate() - 7);
     console.log(sevenDaysAgo, "sevenDaysAgo");
     const closedLeads = await Lead.find({
@@ -669,32 +669,33 @@ app.get("/leads/report/pipeline", async (req, res) => {
 });
 
 //get closed leads in the pipeline;
-const closedLeadInPipeline = async() => {
-  try{
-    const totalClosedLead = await Lead.countDocuments({status: "Closed" })
-    console.log(totalClosedLead, "totalClosedLead")
+const closedLeadInPipeline = async () => {
+  try {
+    const totalClosedLead = await Lead.countDocuments({ status: "Closed" });
+    console.log(totalClosedLead, "totalClosedLead");
     return totalClosedLead;
-  } catch(error){
-    console.log(error, "error")
+  } catch (error) {
+    console.log(error, "error");
   }
-}
+};
 
 // closedLeadInPipeline();
 
 app.get("/leads/report/closedLeads/pipeline", async (req, res) => {
-  try{
+  try {
     const closedLeads = await closedLeadInPipeline();
     console.log(closedLeads, "closedLeads");
-    if(closedLeads){
-      res.status(200).json({totalClosedLeadsInPipeline: closedLeads});
-    } else{
-      res.status(404).json({error: "Total Closed Leads in pipeline is not found." })
+    if (closedLeads) {
+      res.status(200).json({ totalClosedLeadsInPipeline: closedLeads });
+    } else {
+      res
+        .status(404)
+        .json({ error: "Total Closed Leads in pipeline is not found." });
     }
-  } catch(error){
-    res.status(500).json({error: "Cannot fetch total Closed Leads." })
+  } catch (error) {
+    res.status(500).json({ error: "Cannot fetch total Closed Leads." });
   }
-})
-
+});
 
 // get all tags;
 const getAllTags = async () => {
