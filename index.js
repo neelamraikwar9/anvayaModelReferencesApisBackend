@@ -583,11 +583,32 @@ app.get("/comments/:commentsId", async (req, res) => {
 // Description: Fetches all leads that were closed (status: Closed) in the last 7 days.
 //Get closed leads within last 7 days.
 
+// async function getClosedLeads() {
+//   try {
+//     const sevenDaysAgo = new Date();
+//     console.log(sevenDaysAgo, "sevendaysago");
+//     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+//     const closedLeads = await Lead.find({
+//       status: "Closed",
+//       closedAt: { $gte: sevenDaysAgo },
+//     });
+//     console.log(closedLeads, "checking closed leads. ");
+//     return closedLeads;
+//   } catch (error) {
+//     throw error;
+//   }
+// }
+
+// getClosedLeads()
+
 async function getClosedLeads() {
   try {
-    const sevenDaysAgo = new Date();
-    console.log(sevenDaysAgo, "sevendaysago");
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const today = new Date();
+    console.log(today, "today");
+    const sevenDaysAgo = 
+    new Date(today);
+    sevenDaysAgo.setDate(today.getDate() - 7);
+    console.log(sevenDaysAgo, "sevenDaysAgo");
     const closedLeads = await Lead.find({
       status: "Closed",
       closedAt: { $gte: sevenDaysAgo },
@@ -599,7 +620,7 @@ async function getClosedLeads() {
   }
 }
 
-// getClosedLeads()
+getClosedLeads()
 
 // api to get closed leads within last Week;
 app.get("/leads/report/lastWeek", async (req, res) => {
