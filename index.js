@@ -267,7 +267,7 @@ async function getLeadsByStatus(leadByStatus) {
   }
 }
 
-getLeadsByStatus("New");
+// getLeadsByStatus("New");
 
 // api to get leads by status.
 app.get("/leads/status/:leadByStatus", async (req, res) => {
@@ -371,31 +371,6 @@ app.get("/leads/source/:leadBySource", async (req, res) => {
   }
 });
 
-//post new Sales Agent;
-
-// async function createSalesAgent(newAgent){
-//   try{
-//     const agent = new SalesAgent(newAgent);
-//     const savedAgent = await agent.save();
-//     return savedAgent;
-//   } catch(error){
-//     throw error;
-//   }
-// }
-
-//api to post new sales agent;
-
-// app.post("/salesAgent", async (req, res) => {
-//   try{
-//     const saveAgent = await createSalesAgent(newAgent);
-//     console.log(saveAgent)
-// res.status(201).json({message: "Sales Agent added successfully.", agent : savedAgent})
-//     // res.status(201).json({message: "Movie added successfully.", movie: savedMovie})
-//   } catch(error){
-//     res.status(500).json({error: "Failed to add Sales Agent."})
-//   }
-// })
-
 //api to add/ post sales agent;
 async function createSalesAgent(newAgent) {
   try {
@@ -418,6 +393,54 @@ app.post("/salesAgent", async (req, res) => {
       .json({ message: "Sales Agent added successfully.", agent: savedAgent });
   } catch (error) {
     res.status(500).json({ error: "Failed to add Sales Agent." });
+  }
+});
+
+//api to delete leads by id;
+
+async function deleteLead(leadId) {
+  try {
+    const deleteLead = await Lead.findByIdAndDelete(leadId);
+    console.log(deleteLead, "deleteLead");
+    return deleteLead;
+  } catch (error) {
+    console.log(error);
+  }
+}
+// deleteLead("68ede701ebe053a713426e02");
+
+app.delete("/leads/:leadId", async (req, res) => {
+  try {
+    const deleletedLead = deleteLead(req.params.leadId);
+    if (deleletedLead) {
+      res.status(200).json({ message: "Lead deleted successfully." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete Lead." });
+  }
+});
+
+//api to delete Sales Agent by Id;
+async function deleteSalesAgent(salesAgentId) {
+  try {
+    const deleteSalesAgent = await SalesAgent.findByIdAndDelete(salesAgentId);
+    console.log(deleteSalesAgent, "deleteSalesAgent");
+    return deleteSalesAgent;
+  } catch (error) {
+    console.log(error);
+  }
+}
+// deleteSalesAgent("68ef72fd97284561f50f35ec");
+
+app.delete("/salesAgent/:salesAgentId", async (req, res) => {
+  try {
+    const deletedSalesAgent = deleteSalesAgent(req.params.salesAgentId);
+    console.log(deletedSalesAgent, "deleteSalesAgent");
+    if (deletedSalesAgent) {
+      res.status(200).json({ message: "Sales Agent deleted successfully." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete Sales Agent." });
   }
 });
 
