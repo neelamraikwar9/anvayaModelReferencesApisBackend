@@ -228,7 +228,7 @@ app.get("/leads", async (req, res) => {
 // get lead by Id;
 async function getLeadById(leadId) {
   try {
-    const getLead = await Lead.findById(leadId);
+    const getLead = await Lead.findById(leadId).populate("salesAgent");
     console.log(getLead);
     return getLead;
   } catch (error) {
